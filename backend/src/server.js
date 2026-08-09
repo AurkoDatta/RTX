@@ -8,9 +8,11 @@ import http from 'node:http';
 import { createApp } from './app.js';
 import { config } from './config/index.js';
 import { logger } from './utils/logger.js';
+import { createWebSocketServer } from './ws/wsServer.js';
 
 const app = createApp();
 const server = http.createServer(app);
+createWebSocketServer(server);
 
 server.listen(config.port, () => {
   logger.info(`backend listening on port ${config.port}`);

@@ -10,6 +10,7 @@ import { config } from './config/index.js';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
 import authRoutes from './routes/auth.routes.js';
 import presetsRoutes from './routes/presets.routes.js';
+import rendersRoutes from './routes/renders.routes.js';
 import scenesRoutes from './routes/scenes.routes.js';
 
 export function createApp() {
@@ -25,9 +26,10 @@ export function createApp() {
   app.use('/api/auth', authRoutes);
   app.use('/api/presets', presetsRoutes);
   app.use('/api/scenes', scenesRoutes);
+  app.use('/api/renders', rendersRoutes);
 
-  // The renders resource (POST /api/renders, gallery CRUD, WS relay) is
-  // mounted here in a later phase.
+  // The gallery endpoints (GET/DELETE persisted renders) are added in a
+  // later phase alongside the completion-time persistence logic.
 
   app.use(notFoundHandler);
   app.use(errorHandler);
