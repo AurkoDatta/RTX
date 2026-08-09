@@ -1,0 +1,30 @@
+{
+  "name": "backend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/server.js",
+    "start": "node src/server.js",
+    "migrate:up": "node-pg-migrate -m src/db/migrations --envPath .env up",
+    "migrate:down": "node-pg-migrate -m src/db/migrations --envPath .env down",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^5.0.1",
+    "express-rate-limit": "^7.4.1",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.13.1",
+    "pngjs": "^7.0.0",
+    "ws": "^8.18.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "node-pg-migrate": "^9.0.0",
+    "supertest": "^7.0.0",
+    "vitest": "^4.1.10"
+  }
+}
