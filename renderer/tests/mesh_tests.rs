@@ -1,7 +1,14 @@
 use renderer::hittable::Hittable;
+use renderer::material::Material;
 use renderer::primitives::mesh::Mesh;
 use renderer::ray::Ray;
-use renderer::vec3::{Point3, Vec3};
+use renderer::vec3::{Color, Point3, Vec3};
+
+fn test_material() -> Material {
+    Material::Lambertian {
+        albedo: Color::new(0.5, 0.5, 0.5),
+    }
+}
 
 fn sample_mesh() -> Mesh {
     // Two triangles forming a 2x2 square in the z=0 plane, split along the
@@ -13,7 +20,7 @@ fn sample_mesh() -> Mesh {
         Point3::new(0.0, 2.0, 0.0),
     ];
     let indices = vec![[0, 1, 2], [0, 2, 3]];
-    Mesh::new(&vertices, &indices)
+    Mesh::new(&vertices, &indices, test_material())
 }
 
 #[test]

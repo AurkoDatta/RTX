@@ -5,6 +5,7 @@
 
 use crate::aabb::Aabb;
 use crate::hittable::{HitRecord, Hittable};
+use crate::material::Material;
 use crate::ray::Ray;
 use crate::vec3::{Point3, Vec3};
 
@@ -12,11 +13,17 @@ pub struct Triangle {
     pub v0: Point3,
     pub v1: Point3,
     pub v2: Point3,
+    pub material: Material,
 }
 
 impl Triangle {
-    pub fn new(v0: Point3, v1: Point3, v2: Point3) -> Self {
-        Triangle { v0, v1, v2 }
+    pub fn new(v0: Point3, v1: Point3, v2: Point3, material: Material) -> Self {
+        Triangle {
+            v0,
+            v1,
+            v2,
+            material,
+        }
     }
 }
 
@@ -60,6 +67,7 @@ impl Hittable for Triangle {
             normal,
             t,
             front_face,
+            material: self.material,
         })
     }
 

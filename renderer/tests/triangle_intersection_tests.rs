@@ -1,7 +1,14 @@
 use renderer::hittable::Hittable;
+use renderer::material::Material;
 use renderer::primitives::triangle::Triangle;
 use renderer::ray::Ray;
-use renderer::vec3::{Point3, Vec3};
+use renderer::vec3::{Color, Point3, Vec3};
+
+fn test_material() -> Material {
+    Material::Lambertian {
+        albedo: Color::new(0.5, 0.5, 0.5),
+    }
+}
 
 fn sample_triangle() -> Triangle {
     // A right triangle in the z=0 plane: (0,0,0), (2,0,0), (0,2,0).
@@ -9,6 +16,7 @@ fn sample_triangle() -> Triangle {
         Point3::new(0.0, 0.0, 0.0),
         Point3::new(2.0, 0.0, 0.0),
         Point3::new(0.0, 2.0, 0.0),
+        test_material(),
     )
 }
 

@@ -1,7 +1,14 @@
 use renderer::hittable::Hittable;
+use renderer::material::Material;
 use renderer::primitives::plane::Plane;
 use renderer::ray::Ray;
-use renderer::vec3::{Point3, Vec3};
+use renderer::vec3::{Color, Point3, Vec3};
+
+fn test_material() -> Material {
+    Material::Lambertian {
+        albedo: Color::new(0.5, 0.5, 0.5),
+    }
+}
 
 fn sample_quad() -> Plane {
     // A 2x2 quad in the z=0 plane, spanning x in [-1,1], y in [-1,1].
@@ -9,6 +16,7 @@ fn sample_quad() -> Plane {
         Point3::new(-1.0, -1.0, 0.0),
         Vec3::new(2.0, 0.0, 0.0),
         Vec3::new(0.0, 2.0, 0.0),
+        test_material(),
     )
 }
 

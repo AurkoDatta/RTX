@@ -6,9 +6,12 @@
 
 use crate::aabb::Aabb;
 use crate::hittable::{HitRecord, Hittable};
+use crate::material::Material;
 use crate::ray::Ray;
 use crate::vec3::{Point3, Vec3};
+use rand::Rng;
 
+#[derive(Clone, Copy)]
 pub struct Plane {
     corner: Point3,
     u: Vec3,
@@ -19,10 +22,11 @@ pub struct Plane {
     /// Precomputed `(u x v) / |u x v|^2`, used to project a hit point into the
     /// quad's (alpha, beta) parametric basis without re-deriving it per ray.
     w: Vec3,
+    pub material: Material,
 }
 
 impl Plane {
-    pub fn new(corner: Point3, u: Vec3, v: Vec3) -> Self {
+    pub fn new(corner: Point3, u: Vec3, v: Vec3, material: Material) -> Self {
         let n = u.cross(&v);
         let normal = n.normalized();
         let d = normal.dot(&corner);
@@ -34,7 +38,27 @@ impl Plane {
             normal,
             d,
             w,
+            material,
         }
+    }
+
+    pub fn normal(&self) -> Vec3 {
+        self.normal
+    }
+
+    /// The quad's surface area, `|u x v|` -- used to convert a uniform sample
+    /// over the light's area into a solid-angle sample for next-event
+    /// estimation (see `tracer::sample_direct_lighting`).
+    pub fn area(&self) -> f64 {
+        self.u.cross(&self.v).length()
+    }
+
+    /// A uniformly random point on the quad's surface, used to connect a
+    /// shading point directly to this light via a shadow ray.
+    pub fn sample_point(&self, rng: &mut impl Rng) -> Point3 {
+        let a: f64 = rng.gen();
+        let b: f64 = rng.gen();
+        self.corner + self.u * a + self.v * b
     }
 }
 
@@ -67,6 +91,7 @@ impl Hittable for Plane {
             normal,
             t,
             front_face,
+            material: self.material,
         })
     }
 

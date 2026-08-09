@@ -1,8 +1,15 @@
 use renderer::bvh::BvhNode;
 use renderer::hittable::{Hittable, HittableList};
+use renderer::material::Material;
 use renderer::primitives::sphere::Sphere;
 use renderer::ray::Ray;
-use renderer::vec3::{Point3, Vec3};
+use renderer::vec3::{Color, Point3, Vec3};
+
+fn test_material() -> Material {
+    Material::Lambertian {
+        albedo: Color::new(0.5, 0.5, 0.5),
+    }
+}
 
 /// Ten spheres of radius 0.4 spaced one unit apart along the x-axis, each
 /// sitting on its own z = -(5 + i) plane so a straight -z ray through x=i only
@@ -17,7 +24,7 @@ fn ten_spheres_along_x() -> Vec<(Point3, f64)> {
 fn build_list(spheres: &[(Point3, f64)]) -> HittableList {
     let mut list = HittableList::new();
     for (center, radius) in spheres {
-        list.add(Box::new(Sphere::new(*center, *radius)));
+        list.add(Box::new(Sphere::new(*center, *radius, test_material())));
     }
     list
 }
@@ -25,7 +32,9 @@ fn build_list(spheres: &[(Point3, f64)]) -> HittableList {
 fn build_bvh(spheres: &[(Point3, f64)]) -> Box<dyn Hittable> {
     let objects: Vec<Box<dyn Hittable>> = spheres
         .iter()
-        .map(|(center, radius)| Box::new(Sphere::new(*center, *radius)) as Box<dyn Hittable>)
+        .map(|(center, radius)| {
+            Box::new(Sphere::new(*center, *radius, test_material())) as Box<dyn Hittable>
+        })
         .collect();
     BvhNode::build(objects)
 }
@@ -81,8 +90,8 @@ fn bvh_picks_nearer_of_two_overlapping_spheres() {
     let near = Point3::new(0.0, 0.0, -3.0);
     let far = Point3::new(0.0, 0.0, -8.0);
     let objects: Vec<Box<dyn Hittable>> = vec![
-        Box::new(Sphere::new(far, 1.0)),
-        Box::new(Sphere::new(near, 1.0)),
+        Box::new(Sphere::new(far, 1.0, test_material())),
+        Box::new(Sphere::new(near, 1.0, test_material())),
     ];
     let bvh = BvhNode::build(objects);
 
@@ -93,8 +102,11 @@ fn bvh_picks_nearer_of_two_overlapping_spheres() {
 
 #[test]
 fn bvh_handles_single_object_without_wrapping_it_in_a_node() {
-    let objects: Vec<Box<dyn Hittable>> =
-        vec![Box::new(Sphere::new(Point3::new(0.0, 0.0, -5.0), 1.0))];
+    let objects: Vec<Box<dyn Hittable>> = vec![Box::new(Sphere::new(
+        Point3::new(0.0, 0.0, -5.0),
+        1.0,
+        test_material(),
+    ))];
     let bvh = BvhNode::build(objects);
 
     let ray = Ray::new(Point3::new(0.0, 0.0, 0.0), Vec3::new(0.0, 0.0, -1.0));

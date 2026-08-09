@@ -6,6 +6,8 @@ pub mod aabb;
 pub mod bvh;
 pub mod camera;
 pub mod hittable;
+pub mod material;
 pub mod primitives;
 pub mod ray;
+pub mod tracer;
 pub mod vec3;

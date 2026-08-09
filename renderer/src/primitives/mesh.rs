@@ -4,6 +4,7 @@
 
 use crate::aabb::Aabb;
 use crate::hittable::{HitRecord, Hittable, HittableList};
+use crate::material::Material;
 use crate::primitives::triangle::Triangle;
 use crate::ray::Ray;
 use crate::vec3::Point3;
@@ -13,15 +14,17 @@ pub struct Mesh {
 }
 
 impl Mesh {
-    /// Builds a mesh from a flat vertex list and a list of vertex-index triples,
-    /// one triple per triangle face.
-    pub fn new(vertices: &[Point3], indices: &[[usize; 3]]) -> Self {
+    /// Builds a mesh from a flat vertex list and a list of vertex-index
+    /// triples (one triple per triangle face), all sharing a single material
+    /// -- matching the scene-JSON representation, where a mesh is one object
+    /// with one material rather than per-face materials.
+    pub fn new(vertices: &[Point3], indices: &[[usize; 3]], material: Material) -> Self {
         let mut triangles = HittableList::new();
         for tri in indices {
             let v0 = vertices[tri[0]];
             let v1 = vertices[tri[1]];
             let v2 = vertices[tri[2]];
-            triangles.add(Box::new(Triangle::new(v0, v1, v2)));
+            triangles.add(Box::new(Triangle::new(v0, v1, v2, material)));
         }
         Mesh { triangles }
     }
