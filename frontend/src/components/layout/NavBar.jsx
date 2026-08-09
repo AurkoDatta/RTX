@@ -24,6 +24,9 @@ export function NavBar() {
 
         {isAuthenticated && (
           <div className="flex items-center gap-4">
+            <Link to="/editor" className="text-sm text-text-muted transition hover:text-text-primary">
+              Scene Editor
+            </Link>
             <span className="font-mono text-xs text-text-faint">{user?.email}</span>
             <button
               type="button"
