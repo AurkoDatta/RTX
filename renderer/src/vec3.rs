@@ -2,9 +2,10 @@
 //! `Point3` and `Color` are aliases of `Vec3` so the same arithmetic serves all
 //! three roles without duplicating the type.
 
+use serde::Deserialize;
 use std::ops::{Add, AddAssign, Div, Index, Mul, Neg, Sub};
 
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, Deserialize)]
 pub struct Vec3 {
     pub x: f64,
     pub y: f64,

@@ -10,8 +10,9 @@ rayon = "1"
 image = "0.25"
 rand = "0.8"
 clap = { version = "4", features = ["derive"] }
-ctrlc = "3"
+ctrlc = { version = "3", features = ["termination"] }
 thiserror = "1"
+base64 = "0.22"
 
 [dev-dependencies]
 rand_chacha = "0.3"

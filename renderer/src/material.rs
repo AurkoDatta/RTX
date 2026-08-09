@@ -14,6 +14,7 @@ use crate::ray::Ray;
 use crate::tracer::{cosine_weighted_hemisphere_sample, random_in_unit_sphere};
 use crate::vec3::Color;
 use rand::Rng;
+use serde::Deserialize;
 
 /// Fresnel reflectance via Schlick's approximation: a cheap polynomial fit to
 /// the exact (and much more expensive) Fresnel equations, giving the fraction
@@ -25,7 +26,11 @@ pub fn schlick_reflectance(cosine: f64, ref_idx: f64) -> f64 {
     r0 + (1.0 - r0) * (1.0 - cosine).powi(5)
 }
 
-#[derive(Debug, Clone, Copy)]
+/// Deserialized directly from the scene JSON's `material` field, tagged by a
+/// `"type"` key (`"lambertian"`, `"metal"`, `"dielectric"`, `"emissive"`)
+/// matching each variant's snake_case name.
+#[derive(Debug, Clone, Copy, Deserialize)]
+#[serde(tag = "type", rename_all = "snake_case")]
 pub enum Material {
     /// Perfectly diffuse (matte) surface: incoming light scatters in all
     /// directions weighted by cosine, per the Lambertian BRDF (albedo/pi).

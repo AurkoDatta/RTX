@@ -1,0 +1,35 @@
+{
+  "scene": {
+    "camera": {
+      "position": { "x": 0.0, "y": 1.0, "z": 4.0 },
+      "look_at": { "x": 0.0, "y": 0.5, "z": -1.0 },
+      "vfov": 40.0
+    },
+    "objects": [
+      {
+        "type": "sphere",
+        "center": { "x": 0.0, "y": 0.0, "z": -1.0 },
+        "radius": 0.5,
+        "material": {
+          "type": "lambertian",
+          "albedo": { "x": 0.6, "y": 0.6, "z": 0.6 }
+        }
+      },
+      {
+        "type": "sphere",
+        "center": { "x": 0.0, "y": 3.0, "z": -1.0 },
+        "radius": 0.3,
+        "material": {
+          "type": "emissive",
+          "emission": { "x": 8.0, "y": 8.0, "z": 8.0 }
+        }
+      }
+    ]
+  },
+  "settings": {
+    "width": 160,
+    "height": 120,
+    "max_samples": 16,
+    "max_bounce_depth": 4
+  }
+}
