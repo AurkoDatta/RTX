@@ -8,7 +8,7 @@ use crate::ray::Ray;
 use crate::vec3::{Point3, Vec3};
 
 /// Everything shading needs to know about a single ray-object intersection.
-#[derive(Clone, Copy)]
+#[derive(Debug, Clone, Copy)]
 pub struct HitRecord {
     pub point: Point3,
     pub normal: Vec3,

@@ -3,6 +3,7 @@
 //! directly, independent of the CLI/IPC layer.
 
 pub mod aabb;
+pub mod bvh;
 pub mod camera;
 pub mod hittable;
 pub mod primitives;
