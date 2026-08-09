@@ -1,0 +1,48 @@
+{
+  "id": "glass-sphere",
+  "name": "Glass Sphere",
+  "description": "A dielectric sphere demonstrating refraction and Fresnel reflectance next to a diffuse sphere for comparison.",
+  "sceneJson": {
+    "scene": {
+      "camera": {
+        "position": { "x": 0.0, "y": 1.2, "z": 4.0 },
+        "look_at": { "x": 0.0, "y": 0.6, "z": -1.0 },
+        "vfov": 40.0
+      },
+      "objects": [
+        {
+          "type": "plane",
+          "corner": { "x": -6.0, "y": 0.0, "z": -6.0 },
+          "u": { "x": 12.0, "y": 0.0, "z": 0.0 },
+          "v": { "x": 0.0, "y": 0.0, "z": 12.0 },
+          "material": { "type": "lambertian", "albedo": { "x": 0.5, "y": 0.5, "z": 0.55 } }
+        },
+        {
+          "type": "plane",
+          "corner": { "x": -1.5, "y": 5.0, "z": -1.5 },
+          "u": { "x": 3.0, "y": 0.0, "z": 0.0 },
+          "v": { "x": 0.0, "y": 0.0, "z": 3.0 },
+          "material": { "type": "emissive", "emission": { "x": 10.0, "y": 10.0, "z": 10.0 } }
+        },
+        {
+          "type": "sphere",
+          "center": { "x": 0.0, "y": 0.8, "z": -1.0 },
+          "radius": 0.8,
+          "material": { "type": "dielectric", "ior": 1.5 }
+        },
+        {
+          "type": "sphere",
+          "center": { "x": 1.7, "y": 0.5, "z": -0.6 },
+          "radius": 0.5,
+          "material": { "type": "lambertian", "albedo": { "x": 0.8, "y": 0.3, "z": 0.3 } }
+        }
+      ]
+    },
+    "settings": {
+      "width": 640,
+      "height": 480,
+      "max_samples": 64,
+      "max_bounce_depth": 8
+    }
+  }
+}

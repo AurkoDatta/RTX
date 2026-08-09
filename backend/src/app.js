@@ -9,6 +9,8 @@ import express from 'express';
 import { config } from './config/index.js';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
 import authRoutes from './routes/auth.routes.js';
+import presetsRoutes from './routes/presets.routes.js';
+import scenesRoutes from './routes/scenes.routes.js';
 
 export function createApp() {
   const app = express();
@@ -21,9 +23,11 @@ export function createApp() {
   });
 
   app.use('/api/auth', authRoutes);
+  app.use('/api/presets', presetsRoutes);
+  app.use('/api/scenes', scenesRoutes);
 
-  // Remaining resource routes (scenes, presets, renders) are mounted here in
-  // later phases as each is built out.
+  // The renders resource (POST /api/renders, gallery CRUD, WS relay) is
+  // mounted here in a later phase.
 
   app.use(notFoundHandler);
   app.use(errorHandler);
