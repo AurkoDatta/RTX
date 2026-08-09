@@ -4,16 +4,19 @@
  * to `SceneEditorForm`.
  */
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { SceneEditorForm } from '../components/scene-editor/SceneEditorForm.jsx';
 import { Button } from '../components/common/Button.jsx';
 import { Select } from '../components/common/Select.jsx';
 import { useAuth } from '../hooks/useAuth.js';
 import { ApiError } from '../services/api.js';
 import { createScene, getScene, listScenes, updateScene } from '../services/scenesApi.js';
+import { startRender } from '../services/rendersApi.js';
 import { blankScene } from '../utils/sceneSchema.js';
 
 export function SceneEditorPage() {
   const { token } = useAuth();
+  const navigate = useNavigate();
   const [name, setName] = useState('Untitled scene');
   const [sceneDoc, setSceneDoc] = useState(blankScene);
   const [savedScenes, setSavedScenes] = useState([]);
@@ -74,6 +77,19 @@ export function SceneEditorPage() {
     }
   }
 
+  async function handleRender() {
+    setError('');
+    setStatus('starting-render');
+    try {
+      const sceneId = selectedSceneId ? Number(selectedSceneId) : undefined;
+      const { jobId } = await startRender({ sceneJson: sceneDoc, sceneId }, token);
+      navigate(`/render/${jobId}`);
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : 'Could not start the render.');
+      setStatus('');
+    }
+  }
+
   return (
     <div className="mx-auto max-w-3xl px-6 py-8">
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
@@ -89,8 +105,15 @@ export function SceneEditorPage() {
               ]}
             />
           )}
-          <Button variant="primary" onClick={handleSave} disabled={status === 'saving'}>
+          <Button variant="secondary" onClick={handleSave} disabled={status === 'saving'}>
             {status === 'saving' ? 'Saving…' : 'Save scene'}
+          </Button>
+          <Button
+            variant="primary"
+            onClick={handleRender}
+            disabled={status === 'starting-render'}
+          >
+            {status === 'starting-render' ? 'Starting…' : 'Render'}
           </Button>
         </div>
       </div>

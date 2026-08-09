@@ -5,6 +5,7 @@ import { HomePage } from './pages/HomePage.jsx';
 import { LoginPage } from './pages/LoginPage.jsx';
 import { NotFoundPage } from './pages/NotFoundPage.jsx';
 import { RegisterPage } from './pages/RegisterPage.jsx';
+import { RenderViewPage } from './pages/RenderViewPage.jsx';
 import { SceneEditorPage } from './pages/SceneEditorPage.jsx';
 
 export function App() {
@@ -17,8 +18,8 @@ export function App() {
         <Route element={<ProtectedRoute />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/editor" element={<SceneEditorPage />} />
-          {/* Render view and gallery routes are added here in later phases
-              as each page is built. */}
+          <Route path="/render/:jobId" element={<RenderViewPage />} />
+          {/* The gallery route is added here in a later phase. */}
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
