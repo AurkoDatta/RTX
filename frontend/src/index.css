@@ -1,0 +1,61 @@
+@import "tailwindcss";
+
+/*
+ * Design tokens for the "render lab" theme: a dark instrument-panel palette
+ * with two accents pulled from the renderer's own material system --
+ * ember (emissive light) and glass (dielectric/specular) -- rather than an
+ * arbitrary brand color. Numeric/telemetry text (sample counts, ETA,
+ * coordinates) uses the mono face throughout; everything else uses the
+ * grotesk/sans pair.
+ */
+@theme {
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
+
+  --color-void: #0b0d12;
+  --color-surface: #14171f;
+  --color-surface-raised: #1c2029;
+  --color-hairline: #2a2f3a;
+
+  --color-text-primary: #e8e6e0;
+  --color-text-muted: #8b8f9c;
+  --color-text-faint: #565b68;
+
+  --color-ember: #ff8a3d;
+  --color-ember-dim: #b8632a;
+  --color-glass: #6fe3d9;
+  --color-glass-dim: #4a9d96;
+
+  --color-error: #e5484d;
+  --color-success: #6fcf97;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  background-color: var(--color-void);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+}
+
+/* Visible keyboard focus everywhere, styled with the ember accent instead of
+   the browser default blue, so it still reads as part of this theme. */
+:focus-visible {
+  outline: 2px solid var(--color-ember);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
