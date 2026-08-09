@@ -1,9 +1,10 @@
 //! Sphere primitive: the simplest closed surface, solved analytically via the
 //! quadratic form of the ray-sphere intersection equation.
 
+use crate::aabb::Aabb;
 use crate::hittable::{HitRecord, Hittable};
 use crate::ray::Ray;
-use crate::vec3::Point3;
+use crate::vec3::{Point3, Vec3};
 
 pub struct Sphere {
     pub center: Point3,
@@ -53,5 +54,10 @@ impl Hittable for Sphere {
             t: root,
             front_face,
         })
+    }
+
+    fn bounding_box(&self) -> Option<Aabb> {
+        let r = Vec3::new(self.radius, self.radius, self.radius);
+        Some(Aabb::new(self.center - r, self.center + r))
     }
 }

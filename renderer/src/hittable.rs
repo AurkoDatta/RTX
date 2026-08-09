@@ -3,6 +3,7 @@
 //! this trait small lets `tracer.rs` treat "a scene" and "a single sphere" the
 //! same way when casting rays.
 
+use crate::aabb::Aabb;
 use crate::ray::Ray;
 use crate::vec3::{Point3, Vec3};
 
@@ -39,6 +40,11 @@ pub trait Hittable: Send + Sync {
     /// Returns the closest intersection with parameter `t` in `[t_min, t_max]`,
     /// or `None` if the ray misses (or only hits outside that range).
     fn hit(&self, ray: &Ray, t_min: f64, t_max: f64) -> Option<HitRecord>;
+
+    /// The tight axis-aligned box enclosing this object, used to build the BVH.
+    /// Every primitive in this renderer is finite, so this only returns `None`
+    /// for an empty aggregate (e.g. an empty `HittableList`).
+    fn bounding_box(&self) -> Option<Aabb>;
 }
 
 /// An unordered collection of hittables, tested exhaustively in O(n) per ray --
@@ -72,6 +78,21 @@ impl Hittable for HittableList {
             }
         }
 
+        result
+    }
+
+    fn bounding_box(&self) -> Option<Aabb> {
+        if self.objects.is_empty() {
+            return None;
+        }
+        let mut result: Option<Aabb> = None;
+        for object in &self.objects {
+            let bbox = object.bounding_box()?;
+            result = Some(match result {
+                Some(acc) => Aabb::surrounding(&acc, &bbox),
+                None => bbox,
+            });
+        }
         result
     }
 }
