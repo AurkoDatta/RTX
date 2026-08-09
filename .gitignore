@@ -1,0 +1,32 @@
+# Editor notes, not part of the project
+claude.md
+
+# Rust
+/renderer/target/
+/renderer/**/*.rs.bk
+*.pdb
+
+# Node
+node_modules/
+npm-debug.log*
+dist/
+build/
+
+# Environment / secrets
+.env
+.env.local
+*.env
+
+# Logs
+*.log
+
+# Render output storage (generated at runtime)
+backend/storage/renders/*
+!backend/storage/renders/.gitkeep
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
