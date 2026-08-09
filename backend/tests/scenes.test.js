@@ -5,9 +5,11 @@ import { createApp } from '../src/app.js';
 import { pool } from '../src/db/pool.js';
 
 const app = createApp();
+const createdEmails = [];
 
 async function registerAndLogin() {
   const email = `test-${randomUUID()}@example.com`;
+  createdEmails.push(email);
   const res = await request(app)
     .post('/api/auth/register')
     .send({ name: 'Test User', email, password: 'correct horse battery' });
@@ -30,7 +32,11 @@ const minimalScene = {
 };
 
 afterAll(async () => {
-  await pool.query("DELETE FROM users WHERE email LIKE 'test-%@example.com'");
+  // Only this file's own rows -- a broad LIKE cleanup would race with other
+  // test files running concurrently against the same shared dev database.
+  if (createdEmails.length > 0) {
+    await pool.query('DELETE FROM users WHERE email = ANY($1::text[])', [createdEmails]);
+  }
   await pool.end();
 });
 

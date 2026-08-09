@@ -5,16 +5,24 @@ import { createApp } from '../src/app.js';
 import { pool } from '../src/db/pool.js';
 
 const app = createApp();
+const createdEmails = [];
 
 function uniqueEmail() {
-  return `test-${randomUUID()}@example.com`;
+  const email = `test-${randomUUID()}@example.com`;
+  createdEmails.push(email);
+  return email;
 }
 
 afterAll(async () => {
   // Tests run against the real local dev database (no separate test DB in
-  // this project's scope), so clean up whatever they created and close the
-  // pool -- otherwise open connections keep the vitest process alive.
-  await pool.query("DELETE FROM users WHERE email LIKE 'test-%@example.com'");
+  // this project's scope). Delete only the specific rows this file created
+  // -- a broad `LIKE 'test-%'` cleanup would race with other test files
+  // running concurrently against the same database and could delete another
+  // file's in-flight user. Also closes the pool so open connections don't
+  // keep the vitest process alive.
+  if (createdEmails.length > 0) {
+    await pool.query('DELETE FROM users WHERE email = ANY($1::text[])', [createdEmails]);
+  }
   await pool.end();
 });
 
