@@ -4,7 +4,7 @@
  * to `SceneEditorForm`.
  */
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { SceneEditorForm } from '../components/scene-editor/SceneEditorForm.jsx';
 import { Button } from '../components/common/Button.jsx';
 import { Select } from '../components/common/Select.jsx';
@@ -17,6 +17,8 @@ import { blankScene } from '../utils/sceneSchema.js';
 export function SceneEditorPage() {
   const { token } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const sceneIdFromUrl = searchParams.get('sceneId');
   const [name, setName] = useState('Untitled scene');
   const [sceneDoc, setSceneDoc] = useState(blankScene);
   const [savedScenes, setSavedScenes] = useState([]);
@@ -39,6 +41,15 @@ export function SceneEditorPage() {
     setStatus('');
     setError('');
   }
+
+  useEffect(() => {
+    // Loads the scene named by ?sceneId=, e.g. arriving from a gallery
+    // card's "Edit scene" link. Deliberately keyed only on the URL param,
+    // not on `handleLoadSavedScene` (a plain closure, not a dependency).
+    if (sceneIdFromUrl) {
+      handleLoadSavedScene(sceneIdFromUrl);
+    }
+  }, [sceneIdFromUrl]);
 
   async function handleLoadSavedScene(id) {
     setSelectedSceneId(id);

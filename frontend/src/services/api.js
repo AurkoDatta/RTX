@@ -35,3 +35,21 @@ export async function apiFetch(path, { method = 'GET', body, token } = {}) {
 
   return data;
 }
+
+/**
+ * Fetches an image endpoint that requires auth (e.g. a render's PNG) and
+ * returns a local blob URL for it. A plain `<img src>` can't attach an
+ * Authorization header, so authenticated images have to be fetched as data
+ * and handed to the `<img>` this way instead. Callers must revoke the
+ * returned URL (`URL.revokeObjectURL`) when it's no longer displayed.
+ */
+export async function fetchImageBlobUrl(path, token) {
+  const res = await fetch(`${API_URL}${path}`, {
+    headers: token ? { Authorization: `Bearer ${token}` } : {},
+  });
+  if (!res.ok) {
+    throw new ApiError(res.status, 'IMAGE_FETCH_FAILED', 'Could not load the image');
+  }
+  const blob = await res.blob();
+  return URL.createObjectURL(blob);
+}

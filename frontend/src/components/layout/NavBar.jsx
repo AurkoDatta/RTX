@@ -1,7 +1,6 @@
 /**
- * Top navigation bar. Shows the wordmark always; the signed-in identity and
- * sign-out control only once authenticated. Page-specific nav links (Scene
- * Editor, Gallery) are added here as those routes come online.
+ * Top navigation bar. Shows the wordmark always; the signed-in identity,
+ * page links, and sign-out control only once authenticated.
  */
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth.js';
@@ -26,6 +25,9 @@ export function NavBar() {
           <div className="flex items-center gap-4">
             <Link to="/editor" className="text-sm text-text-muted transition hover:text-text-primary">
               Scene Editor
+            </Link>
+            <Link to="/gallery" className="text-sm text-text-muted transition hover:text-text-primary">
+              Gallery
             </Link>
             <span className="font-mono text-xs text-text-faint">{user?.email}</span>
             <button

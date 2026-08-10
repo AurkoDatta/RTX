@@ -1,6 +1,7 @@
 import { Route, Routes } from 'react-router-dom';
 import { NavBar } from './components/layout/NavBar.jsx';
 import { ProtectedRoute } from './components/layout/ProtectedRoute.jsx';
+import { GalleryPage } from './pages/GalleryPage.jsx';
 import { HomePage } from './pages/HomePage.jsx';
 import { LoginPage } from './pages/LoginPage.jsx';
 import { NotFoundPage } from './pages/NotFoundPage.jsx';
@@ -19,7 +20,7 @@ export function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/editor" element={<SceneEditorPage />} />
           <Route path="/render/:jobId" element={<RenderViewPage />} />
-          {/* The gallery route is added here in a later phase. */}
+          <Route path="/gallery" element={<GalleryPage />} />
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
