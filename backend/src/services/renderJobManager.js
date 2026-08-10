@@ -120,7 +120,15 @@ export class RenderJobManager {
     job.status = status;
     job.finishedAt = Date.now();
     if (resultField) job[resultField] = message;
-    job.emit(status === 'completed' ? 'complete' : status, message);
+    // `RenderJob` is an EventEmitter, and Node treats the literal 'error'
+    // event name specially: emitting it with zero listeners attached throws
+    // and crashes the whole process, rather than being a normal no-op like
+    // any other event. A job can fail before any WebSocket client has ever
+    // subscribed to it (e.g. the renderer binary is missing), so 'error'
+    // can't be used here -- 'render-error' carries the same payload without
+    // that landmine.
+    const eventName = status === 'completed' ? 'complete' : status === 'error' ? 'render-error' : status;
+    job.emit(eventName, message);
     this.activeCount = Math.max(0, this.activeCount - 1);
     this.#drainQueue();
   }

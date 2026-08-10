@@ -58,7 +58,9 @@ export function attachRenderSocket(ws, job) {
   job.on('frame', onFrame);
   job.on('complete', onComplete);
   job.on('cancelled', onCancelled);
-  job.on('error', onError);
+  // Renamed from 'error' on the job's own EventEmitter -- see the comment in
+  // renderJobManager.js's #settle for why that name can't be used directly.
+  job.on('render-error', onError);
 
   if (job.status === 'completed' || job.status === 'cancelled' || job.status === 'error') {
     sendJson(ws, job.result || job.error || { type: job.status, job_id: job.id, samples: job.samplesCompleted });
@@ -78,7 +80,7 @@ export function attachRenderSocket(ws, job) {
     job.off('frame', onFrame);
     job.off('complete', onComplete);
     job.off('cancelled', onCancelled);
-    job.off('error', onError);
+    job.off('render-error', onError);
   };
 
   ws.on('close', cleanup);

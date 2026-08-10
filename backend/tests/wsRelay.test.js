@@ -109,7 +109,10 @@ describe('attachRenderSocket', () => {
 
     job.emit('complete', { type: 'complete', job_id: 'job-1', samples: 64 });
     job.emit('cancelled', { type: 'cancelled', job_id: 'job-1', samples: 30 });
-    job.emit('error', { type: 'error', job_id: 'job-1', code: 'RENDERER_CRASHED' });
+    // The job's own EventEmitter uses 'render-error', not 'error' -- see
+    // renderJobManager.js's #settle for why the literal 'error' name is
+    // avoided (Node crashes the process on an unhandled 'error' emit).
+    job.emit('render-error', { type: 'error', job_id: 'job-1', code: 'RENDERER_CRASHED' });
 
     expect(ws.send).toHaveBeenCalledTimes(3);
     expect(JSON.parse(ws.send.mock.calls[0][0]).type).toBe('complete');
